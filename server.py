@@ -6,8 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import database_exists, create_database, drop_database
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 DB_URL = os.environ['DATABASE_URL']
 
@@ -42,9 +44,14 @@ def register_user():
     try:
         db.session.commit()
         return jsonify({ 'username': username, 'email': email })
-    except IntegrityError:
+    except IntegrityError as error:
         db.session.rollback()
-        return jsonify({ 'error': 'email already exists' }), 400
+        if "users_username_key" in str(error):
+            return jsonify({ 'error': 'username already exists' }), 400
+        elif "users_email_key" in str(error):
+            return jsonify({ 'error': 'email already exists' }), 400
+        else:
+            return jsonify({ 'error': 'unknown error' }), 400
 
 
 @app.route('/login', methods=['POST'])
