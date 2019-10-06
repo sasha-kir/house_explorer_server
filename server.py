@@ -41,11 +41,27 @@ def register_user():
 
     try:
         db.session.commit()
-        return jsonify({ 'username': username, 'email': email }), 200
+        return jsonify({ 'username': username, 'email': email })
     except IntegrityError:
         db.session.rollback()
         return jsonify({ 'error': 'email already exists' }), 400
 
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.json['username']
+    password = request.json['password']
+
+    user_entry = User.query.filter_by(username=username).first()
+
+    if user_entry is None:
+        return jsonify({ 'error': 'username does not exist' }), 400
+    else:
+        auth_entry = Auth.query.filter_by(email=user_entry.email).first()
+        if auth_entry.is_correct_password(password):
+            return jsonify({ 'result': 'logged in' })
+        else:
+            return jsonify({ 'error': 'wrong password' }), 400
 
 
 @app.cli.command('resetdb')
