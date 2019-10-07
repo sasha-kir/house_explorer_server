@@ -12,6 +12,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+IPGEO_KEY = os.environ['IPGEO_KEY']
+DADATA_KEY = os.environ['DADATA_KEY']
 DB_URL = os.environ['DATABASE_URL']
 
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -81,18 +83,29 @@ def login():
 
 
 @app.route("/user_location", methods=["GET"])
-def get_ip():
-    # request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-    IPGEO_KEY = os.environ['IPGEO_KEY']
-    CLIENT_IP = '178.140.101.10'                        # TODO: get ip automatically
-    response = requests.get(f'https://api.ipgeolocation.io/ipgeo?apiKey={IPGEO_KEY}&ip={CLIENT_IP}')
-    data = response.json()
-    lat, lon = data['latitude'], data['longitude']
-    return jsonify({
-        'ip': CLIENT_IP,
-        'lat': lat,
-        'lon': lon
-    }), 200
+def get_user_location():
+    # client_ip = request.remote_addr
+    client_ip = '178.140.101.10'                        # TODO: get ip automatically
+    # request to dadata API
+    payload = { 'ip': client_ip }
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f'Token {DADATA_KEY}'
+    }
+    url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/iplocate/address'
+    response = requests.get(url, params=payload, headers=headers)
+    location = response.json()['location']
+    if location is None:
+        return jsonify({ 'error': 'was not able to determine location' }), 400
+    else:
+        data = location['data']
+        return jsonify({
+            'lat': data['geo_lat'],
+            'lon': data['geo_lon'],
+            'city': data['city'],
+            'country': data['country'],
+            'isoCode': data['region_iso_code'],
+        }), 200
 
 
 @app.cli.command('resetdb')
