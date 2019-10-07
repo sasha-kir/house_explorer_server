@@ -12,8 +12,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-IPGEO_KEY = os.environ['IPGEO_KEY']
 DADATA_KEY = os.environ['DADATA_KEY']
+DADATA_URL = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/'
 DB_URL = os.environ['DATABASE_URL']
 
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -92,7 +92,7 @@ def get_user_location():
         "Accept": "application/json",
         "Authorization": f'Token {DADATA_KEY}'
     }
-    url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/iplocate/address'
+    url = DADATA_URL + 'iplocate/address'
     response = requests.get(url, params=payload, headers=headers)
     location = response.json()['location']
     if location is None:
@@ -106,6 +106,44 @@ def get_user_location():
             'country': data['country'],
             'isoCode': data['region_iso_code'],
         }), 200
+
+
+@app.route("/suggestions", methods=["POST"])
+def get_suggestions():
+    headers =  {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': f'Token {DADATA_KEY}'
+    }
+    payload = {
+        "query": request.json['query'],
+        "count": request.json['count'],
+        "locations": [
+            { 
+                "city": request.json['city'],
+                "country": request.json['country']
+            }
+        ],
+        "restrict_value": True
+    }
+    url = DADATA_URL + 'suggest/address'
+    response = requests.post(url, json=payload, headers=headers)
+    suggestions = response.json()['suggestions']
+    if not suggestions:
+        return jsonify({ 'error': 'no suggestions available' }), 400
+    else:
+        result = []
+        for elem in suggestions:
+            suggestion = {
+                "lat": elem['data']['geo_lat'],
+                "lon": elem['data']['geo_lon'],
+                "fiasLevel": elem['data']['fias_level'],
+                "fullAddress": elem['unrestricted_value'],
+                "address": elem['value']
+            }
+            result.append(suggestion)
+
+        return jsonify(result), 200
 
 
 @app.cli.command('resetdb')
