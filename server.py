@@ -1,4 +1,5 @@
 import os
+import requests
 from termcolor import colored
 
 from flask import Flask, Response, request, jsonify
@@ -43,12 +44,16 @@ def register_user():
 
     try:
         db.session.commit()
-        return jsonify({ 'username': username, 'email': email })
+        return jsonify({ 
+            'username': username, 
+            'email': email, 
+            'joined': new_user.joined_at 
+        })
     except IntegrityError as error:
         db.session.rollback()
         if "users_username_key" in str(error):
             return jsonify({ 'error': 'username already exists' }), 400
-        elif "users_email_key" in str(error):
+        elif "email_key" in str(error):
             return jsonify({ 'error': 'email already exists' }), 400
         else:
             return jsonify({ 'error': 'unknown error' }), 400
@@ -62,13 +67,32 @@ def login():
     user_entry = User.query.filter_by(username=username).first()
 
     if user_entry is None:
-        return jsonify({ 'error': 'username does not exist' }), 400
+        return jsonify({ 'error': 'wrong username or password' }), 400
     else:
         auth_entry = Auth.query.filter_by(email=user_entry.email).first()
         if auth_entry.is_correct_password(password):
-            return jsonify({ 'result': 'logged in' })
+            return jsonify({    
+                'username': user_entry.username, 
+                'email': user_entry.email, 
+                'joined': user_entry.joined_at 
+            })
         else:
-            return jsonify({ 'error': 'wrong password' }), 400
+            return jsonify({ 'error': 'wrong username or password' }), 400
+
+
+@app.route("/user_location", methods=["GET"])
+def get_ip():
+    # request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    IPGEO_KEY = os.environ['IPGEO_KEY']
+    CLIENT_IP = '178.140.101.10'                        # TODO: get ip automatically
+    response = requests.get(f'https://api.ipgeolocation.io/ipgeo?apiKey={IPGEO_KEY}&ip={CLIENT_IP}')
+    data = response.json()
+    lat, lon = data['latitude'], data['longitude']
+    return jsonify({
+        'ip': CLIENT_IP,
+        'lat': lat,
+        'lon': lon
+    }), 200
 
 
 @app.cli.command('resetdb')
