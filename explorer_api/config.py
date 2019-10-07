@@ -7,7 +7,6 @@ class Config(object):
     SECRET_KEY = 'this-really-needs-to-be-changed'
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
 
 class DevelopmentConfig(Config):
     """
@@ -23,7 +22,15 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
 
+class TestingConfig(Config):
+    """
+    Testing environment configuration
+    """
+    DEBUG = True
+    TESTING = True
+
 app_config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
+    'testing': TestingConfig
 }

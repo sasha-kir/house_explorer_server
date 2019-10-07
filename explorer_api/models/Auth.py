@@ -8,7 +8,7 @@ class Auth(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    _password = db.Column('password', db.Binary(60), nullable=False)
+    _password = db.Column('password', db.LargeBinary(60), nullable=False)
 
     def __init__(self, email, plaintext_password):
         self.email = email

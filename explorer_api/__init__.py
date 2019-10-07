@@ -13,13 +13,16 @@ from .views.dadata_view import dadata
 
 DB_URL = os.environ['DATABASE_URL']
 
-def create_app():
+def create_app(testing=False):
     app = Flask(__name__)
 
     CORS(app)
 
-    env_name = os.environ['FLASK_ENV']
-    app.config.from_object(app_config[env_name])
+    if testing:
+        app.config.from_object(app_config['testing'])
+    else:
+        env_name = os.environ['FLASK_ENV']
+        app.config.from_object(app_config[env_name])
 
     bcrypt.init_app(app)
     db.init_app(app)
