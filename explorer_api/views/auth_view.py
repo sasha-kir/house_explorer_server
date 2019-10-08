@@ -5,6 +5,8 @@ from ..models import db
 from ..models.User import User
 from ..models.Auth import Auth
 
+from ..shared.Authentication import TokenAuth
+
 auth = Blueprint('auth', __name__)
 
 @auth.route('/register', methods=['POST'])
@@ -21,11 +23,12 @@ def register_user():
 
     try:
         db.session.commit()
-        return jsonify({ 
-            'username': username, 
-            'email': email, 
-            'joined': new_user.joined_at 
-        })
+         # generate token
+        token_result = TokenAuth.generate_token(email)
+        if 'token' in token_result:
+            return jsonify({ 'token': token_result['token'] }), 200
+        else:
+            return jsonify(token_result), 400
     except IntegrityError as error:
         db.session.rollback()
         if "users_username_key" in str(error):
@@ -44,14 +47,27 @@ def login():
     user_entry = User.query.filter_by(username=username).first()
 
     if user_entry is None:
-        return jsonify({ 'error': 'wrong username or password' }), 400
+        return jsonify({ 'error': 'wrong username or password' }), 401
     else:
         auth_entry = Auth.query.filter_by(email=user_entry.email).first()
         if auth_entry.is_correct_password(password):
-            return jsonify({    
-                'username': user_entry.username, 
-                'email': user_entry.email, 
-                'joined': user_entry.joined_at 
-            })
+            # generate token
+            token_result = TokenAuth.generate_token(user_entry.email)
+            if 'token' in token_result:
+                return jsonify({ 'token': token_result['token'] }), 200
+            else:
+                return jsonify(token_result), 400
         else:
-            return jsonify({ 'error': 'wrong username or password' }), 400
+            return jsonify({ 'error': 'wrong username or password' }), 401
+
+
+@auth.route('/check_token', methods=["POST"])
+def check_token():
+    token = request.json['token']
+    decode_result = TokenAuth.decode_token(token)
+
+    if 'user_email' in decode_result:
+        return jsonify({ 'success': True }), 200
+    else:
+        return jsonify(decode_result), 401
+
