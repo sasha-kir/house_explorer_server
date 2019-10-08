@@ -1,5 +1,7 @@
 import pytest
 
+from explorer_api.shared.Authentication import TokenAuth
+
 def test_valid_login(test_client, init_database):
     username = 'test'
     email = 'test@test.com'
@@ -11,9 +13,13 @@ def test_valid_login(test_client, init_database):
                                     'password': password
                                 })
     assert response.status_code == 200
+    assert "token" in response.json
 
-    assert response.json['username'] == username
-    assert response.json['email'] == email
+    token = response.json["token"]
+    decoded_result = TokenAuth.decode_token(token)
+
+    assert "user_email" in decoded_result
+    assert decoded_result["user_email"] == email
 
 
 def test_invalid_login(test_client, init_database):
@@ -28,7 +34,7 @@ def test_invalid_login(test_client, init_database):
                                     'username': correct_username, 
                                     'password': fake_password
                                 })
-    assert response.status_code == 400
+    assert response.status_code == 401
     assert response.json['error'] == "wrong username or password"
 
     response = test_client.post('/login',
@@ -36,7 +42,7 @@ def test_invalid_login(test_client, init_database):
                                     'username': fake_username, 
                                     'password': correct_password
                                 })
-    assert response.status_code == 400
+    assert response.status_code == 401
     assert response.json['error'] == "wrong username or password"
 
     response = test_client.post('/login',
@@ -44,5 +50,5 @@ def test_invalid_login(test_client, init_database):
                                     'username': fake_username, 
                                     'password': fake_password
                                 })
-    assert response.status_code == 400
+    assert response.status_code == 401
     assert response.json['error'] == "wrong username or password"

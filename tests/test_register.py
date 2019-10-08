@@ -1,5 +1,7 @@
 import pytest
 
+from explorer_api.shared.Authentication import TokenAuth
+
 def test_registration(test_client, init_database):
     username = "bob"
     email = "bob@gmail.com"
@@ -13,8 +15,13 @@ def test_registration(test_client, init_database):
                                 })
 
     assert response.status_code == 200
-    assert response.json['username'] == username
-    assert response.json['email'] == email
+    assert "token" in response.json
+    
+    token = response.json["token"]
+    decoded_result = TokenAuth.decode_token(token)
+
+    assert "user_email" in decoded_result
+    assert decoded_result["user_email"] == email
 
 
 def test_existing_username(test_client, init_database):

@@ -29,7 +29,11 @@ class TokenAuth():
     @staticmethod
     def decode_token(token):
         try:
-            payload = jwt.decode(token, os.environ['JWT_KEY'])
+            payload = jwt.decode(
+                token, 
+                os.environ['JWT_KEY'],
+                algorithms=['HS256']
+            )
             return { 'user_email': payload['sub'] }
         except KeyError:
             return { 'error': 'wrong token format' }
