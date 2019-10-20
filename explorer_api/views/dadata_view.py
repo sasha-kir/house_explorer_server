@@ -101,8 +101,12 @@ def get_house_info():
     else:
         data = suggestions[0]['data']
 
+        fias_level = int(data['fias_level'])
+        if data['house']:
+            fias_level = 8
+
         # check if dadata returned house
-        if int(data['fias_level']) < 8:
+        if fias_level < 8:
             house_info = {
                 "lat": data['geo_lat'],
                 "lon": data['geo_lon'],
@@ -131,7 +135,7 @@ def get_house_info():
         house_info = {
             "lat": data['geo_lat'],
             "lon": data['geo_lon'],
-            "fiasLevel": data['fias_level'],
+            "fiasLevel": fias_level,
             "fullAddress": suggestions[0]['unrestricted_value'],
             "infoBlock": {
                 "address": f'{data["city"]}, {suggestions[0]["value"]}',

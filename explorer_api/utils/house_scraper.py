@@ -98,8 +98,8 @@ def scrape_house_info(city, street_type, street, house_type, house, block_type, 
         index += 2
 
     return {
-        'year_built': info_dict["Год постройки"],
-        'house_type': info_dict["Серия, тип постройки"],
-        'floor_count': info_dict["Количество этажей"],
-        'walls_material': info_dict["Материал несущих стен"],
+        'year_built': info_dict.get("Год постройки", "-"),
+        'house_type': info_dict.get("Серия, тип постройки", "-"),
+        'floor_count': info_dict.get("Количество этажей", "-"),
+        'walls_material': info_dict.get("Материал несущих стен", "-"),
     }          
