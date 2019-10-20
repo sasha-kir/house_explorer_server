@@ -3,6 +3,8 @@ import requests
 
 from flask import request, jsonify, Blueprint
 
+from .house_scraper import scrape_house_info
+
 dadata = Blueprint('dadata', __name__)
 
 DADATA_KEY = os.environ['DADATA_KEY']
@@ -71,6 +73,73 @@ def get_suggestions():
 
         return jsonify(result), 200
 
+
+@dadata.route("/house_info", methods=["POST"])
+def get_house_info():
+    headers =  {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': f'Token {DADATA_KEY}'
+    }
+    payload = {
+        "query": request.json['query'],
+        "count": 1,
+        "locations": [
+            { 
+                "city": request.json['city'],
+                "country": request.json['country']
+            }
+        ],
+        "restrict_value": True
+    }
+    url = DADATA_URL + 'suggest/address'
+    response = requests.post(url, json=payload, headers=headers)
+    suggestions = response.json()['suggestions']
+    if not suggestions:
+        return jsonify({ 'error': 'house info not available' }), 400
+    else:
+        data = suggestions[0]['data']
+
+        # check if dadata returned house
+        if int(data['fias_level']) < 8:
+            house_info = {
+                "lat": data['geo_lat'],
+                "lon": data['geo_lon'],
+                "fiasLevel": data['fias_level'],
+                "fullAddress": suggestions[0]['unrestricted_value'],
+                "address": suggestions[0]['value']
+            }
+            return jsonify(house_info), 200
+
+        # fetch house info
+        scraping_result = scrape_house_info(
+            data["city"],
+            data["street_type"], 
+            data["street"],
+            data["house_type"],
+            data["house"],
+            data["block_type"],
+            data["block"]
+        )
+
+        if "error" in scraping_result.keys():
+            return jsonify(scraping_result), 400
+
+        house_info = {
+            "lat": data['geo_lat'],
+            "lon": data['geo_lon'],
+            "fiasLevel": data['fias_level'],
+            "fullAddress": suggestions[0]['unrestricted_value'],
+            "infoBlock": {
+                "address": f'{data["city"]}, {suggestions[0]["value"]}',
+                "yearBuilt": scraping_result["year_built"],
+                "houseType": scraping_result["house_type"],
+                "floorCount": scraping_result["floor_count"],
+                "wallsMaterial": scraping_result["walls_material"],
+            }
+        }
+
+        return jsonify(house_info), 200
 
 
 
