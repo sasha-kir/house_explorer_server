@@ -13,14 +13,23 @@ BASE_URL = "http://dom.mingkh.ru"
 
 def scrape_house_info(city, street_type, street, house_type, house, block_type, block):
 
-    address_parts = [street_type, street, house_type, house]
+    address_parts = [street_type]
+
+    # if street name consists of multiple words
+    if " " in street:
+        address_parts += street.split()
+    else:
+        address_parts += [street]
+
+    address_parts += [house_type, house]
+
     if block:
         address_parts += [block_type]
         if "стр" in block:
             address_parts += block.split()
         else:
             address_parts += [block]
-            
+
     full_address = [city] + address_parts
 
     payload = { 
