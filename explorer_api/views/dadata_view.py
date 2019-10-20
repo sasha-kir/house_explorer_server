@@ -3,7 +3,8 @@ import requests
 
 from flask import request, jsonify, Blueprint
 
-from .house_scraper import scrape_house_info
+from explorer_api.utils.house_scraper import scrape_house_info
+from explorer_api.utils.type_finder import find_type_link
 
 dadata = Blueprint('dadata', __name__)
 
@@ -125,6 +126,8 @@ def get_house_info():
         if "error" in scraping_result.keys():
             return jsonify(scraping_result), 400
 
+        house_type_link = find_type_link(scraping_result["house_type"])
+
         house_info = {
             "lat": data['geo_lat'],
             "lon": data['geo_lon'],
@@ -134,6 +137,7 @@ def get_house_info():
                 "address": f'{data["city"]}, {suggestions[0]["value"]}',
                 "yearBuilt": scraping_result["year_built"],
                 "houseType": scraping_result["house_type"],
+                "houseTypeLink": house_type_link,
                 "floorCount": scraping_result["floor_count"],
                 "wallsMaterial": scraping_result["walls_material"],
             }
