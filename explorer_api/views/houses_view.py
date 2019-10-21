@@ -6,12 +6,12 @@ from flask import request, jsonify, Blueprint
 from explorer_api.utils.house_scraper import scrape_house_info
 from explorer_api.utils.type_finder import find_type_link
 
-dadata = Blueprint('dadata', __name__)
+house_info = Blueprint('dadata', __name__)
 
 DADATA_KEY = os.environ['DADATA_KEY']
 DADATA_URL = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/'
 
-@dadata.route("/user_location", methods=["GET"])
+@house_info.route("/user_location", methods=["GET"])
 def get_user_location():
     # client_ip = request.remote_addr
     client_ip = '178.140.101.10'                        # TODO: get ip automatically
@@ -37,7 +37,7 @@ def get_user_location():
         }), 200
 
 
-@dadata.route("/suggestions", methods=["POST"])
+@house_info.route("/suggestions", methods=["POST"])
 def get_suggestions():
     headers =  {
         'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ def get_suggestions():
         return jsonify(result), 200
 
 
-@dadata.route("/house_info", methods=["POST"])
+@house_info.route("/house_info", methods=["POST"])
 def get_house_info():
     headers =  {
         'Content-Type': 'application/json',

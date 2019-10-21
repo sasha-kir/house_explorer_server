@@ -9,7 +9,8 @@ from .config import app_config
 from .models import db, bcrypt
 
 from .views.auth_view import auth
-from .views.dadata_view import dadata
+from .views.houses_view import house_info
+from .views.profile_view import profile
 
 DB_URL = os.environ['DATABASE_URL']
 
@@ -28,7 +29,8 @@ def create_app(testing=False):
     db.init_app(app)
 
     app.register_blueprint(auth)
-    app.register_blueprint(dadata)
+    app.register_blueprint(house_info)
+    app.register_blueprint(profile)
 
     @app.route('/', methods=['GET'])
     def index():
