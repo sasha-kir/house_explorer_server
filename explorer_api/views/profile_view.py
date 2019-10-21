@@ -16,12 +16,12 @@ def get_user_profile():
     email = decode_result.get("user_email", "")
 
     if not email:
-        return jsonify({ "error": "invalid token" }), 400
+        return jsonify({ "error": "invalid token" }), 401
 
     user_entry = User.query.filter_by(email=email).first()
 
     if not user_entry:
-        return jsonify({ "error": "invalid token" }), 400
+        return jsonify({ "error": "invalid token" }), 401
 
     current_date = datetime.now().date()
     dates_delta = current_date - user_entry.joined_at.date()
@@ -44,7 +44,7 @@ def get_userpic():
     email = decode_result.get("user_email", "")
 
     if not email:
-        return jsonify({ "error": "invalid token" }), 400
+        return jsonify({ "error": "invalid token" }), 401
 
     email_hash = md5(bytes(email, encoding="utf-8")).hexdigest()
     gravatar_link = 'https://www.gravatar.com/avatar/' + email_hash + "?d=mp&s=100"

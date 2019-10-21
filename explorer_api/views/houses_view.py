@@ -128,7 +128,9 @@ def get_house_info():
         )
 
         if "error" in scraping_result.keys():
-            return jsonify(scraping_result), 400
+            return jsonify({
+                "scraping error": scraping_result["error"]
+            }), 400
 
         house_type_link = find_type_link(scraping_result["house_type"])
 
