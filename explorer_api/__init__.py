@@ -11,6 +11,7 @@ from .models import db, bcrypt
 from .views.auth_view import auth
 from .views.houses_view import house_info
 from .views.profile_view import profile
+from .views.history_view import history
 
 DB_URL = os.environ['DATABASE_URL']
 
@@ -31,6 +32,7 @@ def create_app(testing=False):
     app.register_blueprint(auth)
     app.register_blueprint(house_info)
     app.register_blueprint(profile)
+    app.register_blueprint(history)
 
     @app.route('/', methods=['GET'])
     def index():

@@ -6,10 +6,13 @@ from flask import request, jsonify, Blueprint
 from explorer_api.utils.house_scraper import scrape_house_info
 from explorer_api.utils.type_finder import find_type_link
 
+from ..shared.Authentication import TokenAuth
+
 house_info = Blueprint('dadata', __name__)
 
 DADATA_KEY = os.environ['DADATA_KEY']
 DADATA_URL = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/'
+
 
 @house_info.route("/user_location", methods=["GET"])
 def get_user_location():
@@ -150,6 +153,3 @@ def get_house_info():
         }
 
         return jsonify(house_info), 200
-
-
-

@@ -41,3 +41,19 @@ class TokenAuth():
             return { 'error': 'token expired, please login again' }
         except jwt.InvalidTokenError:
             return { 'error': 'invalid token' }
+
+
+    @staticmethod
+    def user_from_token(token):
+        decode_result = TokenAuth.decode_token(token)
+        email = decode_result.get("user_email", "")
+
+        if not email:
+            return { "error": "invalid token" }
+
+        user_entry = User.query.filter_by(email=email).first()
+
+        if not user_entry:
+            return { "error": "invalid token" }
+        else:
+            return { "success": user_entry }
