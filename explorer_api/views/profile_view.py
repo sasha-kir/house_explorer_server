@@ -11,7 +11,7 @@ profile = Blueprint('profile', __name__)
 
 @profile.route('/profile', methods=['POST'])
 def get_user_profile():
-    token = request.json["token"]
+    token = request.json.get("token", '')
     decode_result = TokenAuth.user_from_token(token)
 
     if "error" in decode_result:
@@ -35,7 +35,7 @@ def get_user_profile():
 
 @profile.route('/userpic', methods=['POST'])
 def get_userpic():
-    token = request.json["token"]
+    token = request.json.get("token", '')
     decode_result = TokenAuth.decode_token(token)
     email = decode_result.get("user_email", "")
 

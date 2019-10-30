@@ -14,7 +14,7 @@ history = Blueprint('history', __name__)
 
 @history.route("/save_house", methods=["POST"])
 def save_to_history():
-    token = request.json['token']
+    token = request.json.get('token', '')
     decode_result = TokenAuth.user_from_token(token)
 
     if "error" in decode_result:
@@ -23,8 +23,11 @@ def save_to_history():
     user_entry = decode_result["success"]
 
     user_id = user_entry.id
-    house_info = request.json['houseInfo']
-    map_coords = request.json['mapCoords']
+    house_info = request.json.get('houseInfo', '')
+    map_coords = request.json.get('mapCoords', '')
+    if not house_info or not map_coords:
+        return jsonify({ "error": "wrong request parameters" }), 400
+
     house_coords = f'{map_coords[1]},{map_coords[0]}'
 
     history_entry = History(
@@ -40,7 +43,7 @@ def save_to_history():
 
 @history.route("/history", methods=["POST"])
 def get_history():
-    token = request.json['token']
+    token = request.json.get('token', '')
     decode_result = TokenAuth.user_from_token(token)
 
     if "error" in decode_result:
@@ -66,7 +69,7 @@ def get_history():
 
 @history.route("/delete_house", methods=["POST"])
 def delete_from_history():
-    token = request.json['token']
+    token = request.json.get('token', '')
     decode_result = TokenAuth.user_from_token(token)
 
     if "error" in decode_result:
@@ -75,7 +78,10 @@ def delete_from_history():
     user_entry = decode_result["success"]
 
     user_id = user_entry.id
-    house_coords = request.json['houseCoords']
+    house_coords = request.json.get('houseCoords', '')
+
+    if not house_coords:
+        return jsonify({ "error": "wrong request parameters" }), 400
 
     History.query.filter_by(user_id=user_id, house_coords=house_coords).delete()
     db.session.commit()

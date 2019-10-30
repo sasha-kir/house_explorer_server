@@ -26,11 +26,11 @@ def get_user_location():
     }
     url = DADATA_URL + 'iplocate/address'
     response = requests.get(url, params=payload, headers=headers)
-    location = response.json()['location']
+    location = response.json().get('location', None)
     if location is None:
         return jsonify({ 'error': 'was not able to determine location' }), 400
     else:
-        data = location['data']
+        data = location.get('data')
         return jsonify({
             'lat': data['geo_lat'],
             'lon': data['geo_lon'],
@@ -48,19 +48,19 @@ def get_suggestions():
         'Authorization': f'Token {DADATA_KEY}'
     }
     payload = {
-        "query": request.json['query'],
-        "count": request.json['count'],
+        "query": request.json.get('query', ''),
+        "count": request.json.get('count', 10),
         "locations": [
             { 
-                "city": request.json['city'],
-                "country": request.json['country']
+                "city": request.json.get('city', ''),
+                "country": request.json.get('country', '')
             }
         ],
         "restrict_value": True
     }
     url = DADATA_URL + 'suggest/address'
     response = requests.post(url, json=payload, headers=headers)
-    suggestions = response.json()['suggestions']
+    suggestions = response.json().get('suggestions', '')
     if not suggestions:
         return jsonify({ 'error': 'no suggestions available' }), 400
     else:
@@ -86,19 +86,19 @@ def get_house_info():
         'Authorization': f'Token {DADATA_KEY}'
     }
     payload = {
-        "query": request.json['query'],
+        "query": request.json.get('query', ''),
         "count": 1,
         "locations": [
             { 
-                "city": request.json['city'],
-                "country": request.json['country']
+                "city": request.json.get('city', ''),
+                "country": request.json.get('country', '')
             }
         ],
         "restrict_value": True
     }
     url = DADATA_URL + 'suggest/address'
     response = requests.post(url, json=payload, headers=headers)
-    suggestions = response.json()['suggestions']
+    suggestions = response.json().get('suggestions', '')
     if not suggestions:
         return jsonify({ 'error': 'house info not available' }), 400
     else:

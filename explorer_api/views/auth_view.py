@@ -11,9 +11,11 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/register', methods=['POST'])
 def register_user():
-    username = request.json['username']
-    email = request.json['email']
-    password = request.json['password']
+    username = request.json.get('username', '')
+    email = request.json.get('email', '')
+    password = request.json('password', '')
+    if not username or not password or not email:
+        return jsonify({ "error": "wrong request parameters" }), 400
 
     new_user = User(username=username, email=email)
     new_auth = Auth(email=email, plaintext_password=password)
@@ -41,8 +43,11 @@ def register_user():
 
 @auth.route('/login', methods=['POST'])
 def login():
-    username = request.json['username']
-    password = request.json['password']
+    username = request.json.get('username', '')
+    password = request.json.get('password', '')
+
+    if not username or not password:
+        return jsonify({ "error": "wrong request parameters" }), 400
 
     user_entry = User.query.filter_by(username=username).first()
 
@@ -63,7 +68,7 @@ def login():
 
 @auth.route('/check_token', methods=["POST"])
 def check_token():
-    token = request.json['token']
+    token = request.json.get('token', '')
     decode_result = TokenAuth.decode_token(token)
 
     if 'user_email' in decode_result:
