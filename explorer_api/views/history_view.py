@@ -59,9 +59,26 @@ def get_history():
         result.append({
             "date": row.added_at, 
             "houseInfo": row.house_info,
-            "mapCoords": row.house_coords
+            "houseCoords": row.house_coords
         })
     return jsonify({ "history": result }), 200
 
+
+@history.route("/delete_house", methods=["POST"])
+def delete_from_history():
+    token = request.json['token']
+    decode_result = TokenAuth.user_from_token(token)
+
+    if "error" in decode_result:
+        return jsonify({ "error": "invalid token" }), 401
     
+    user_entry = decode_result["success"]
+
+    user_id = user_entry.id
+    house_coords = request.json['houseCoords']
+
+    History.query.filter_by(user_id=user_id, house_coords=house_coords).delete()
+    db.session.commit()
+
+    return jsonify("house successfully deleted"), 200
 
