@@ -23,9 +23,15 @@ def save_to_history():
     user_entry = decode_result["success"]
 
     user_id = user_entry.id
-    house_info = request.json['house_info']
+    house_info = request.json['houseInfo']
+    map_coords = request.json['mapCoords']
+    house_coords = f'{map_coords[1]},{map_coords[0]}'
 
-    history_entry = History(user_id=user_id, house_info=house_info)
+    history_entry = History(
+        user_id=user_id, 
+        house_info=house_info, 
+        house_coords=house_coords
+    )
     db.session.add(history_entry)
     db.session.commit()
 
@@ -48,12 +54,13 @@ def get_history():
     if history_entries.count() == 0:
         return jsonify({ "history": None }), 200
 
-    result = dict()
-    for index, row in enumerate(history_entries):
-        result[index + 1] = {
+    result = []
+    for row in history_entries:
+        result.append({
             "date": row.added_at, 
-            "house_info": row.house_info
-        }
+            "houseInfo": row.house_info,
+            "mapCoords": row.house_coords
+        })
     return jsonify({ "history": result }), 200
 
     
