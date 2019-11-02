@@ -1,0 +1,6 @@
+include explorer_api/config.py
+graft explorer_api/views
+graft explorer_api/utils
+graft explorer_api/models
+graft explorer_api/shared
+global-exclude *.pyc
