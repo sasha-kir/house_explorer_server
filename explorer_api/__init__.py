@@ -36,7 +36,7 @@ def create_app(testing=False):
 
     @app.route('/', methods=['GET'])
     def index():
-        return 'Congratulations! Your first endpoint is working'
+        return "You've reached an API running on Flask."
 
 
     @app.cli.command('resetdb')

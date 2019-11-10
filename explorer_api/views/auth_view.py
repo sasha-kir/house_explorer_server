@@ -13,7 +13,7 @@ auth = Blueprint('auth', __name__)
 def register_user():
     username = request.json.get('username', '')
     email = request.json.get('email', '')
-    password = request.json('password', '')
+    password = request.json.get('password', '')
     if not username or not password or not email:
         return jsonify({ "error": "wrong request parameters" }), 400
 
