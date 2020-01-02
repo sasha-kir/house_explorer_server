@@ -13,11 +13,9 @@ house_info = Blueprint('dadata', __name__)
 DADATA_KEY = os.environ['DADATA_KEY']
 DADATA_URL = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/'
 
-
 @house_info.route("/user_location", methods=["GET"])
 def get_user_location():
-    # client_ip = request.remote_addr
-    client_ip = '178.140.101.10'                        # TODO: get ip automatically
+    client_ip = request.remote_addr
     # request to dadata API
     payload = { 'ip': client_ip }
     headers = {
