@@ -26,7 +26,7 @@ def get_user_location():
     response = requests.get(url, params=payload, headers=headers)
     location = response.json().get('location', None)
     if location is None:
-        return jsonify({ 'error': 'was not able to determine location' }), 400
+        return jsonify({ 'error': 'was not able to determine location' }), 500
     else:
         data = location.get('data')
         return jsonify({
