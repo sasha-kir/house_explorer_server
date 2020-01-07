@@ -1,12 +1,6 @@
-from bs4 import BeautifulSoup
 import requests
-
-TRANSLIT = {
-    "Москва": "moskva",
-    "Санкт-Петербург": "sankt-peterburg",
-    "Екатеринбург": "ekaterinburg",
-    "Новосибирск": "novosibirsk"
-}
+from bs4 import BeautifulSoup
+from transliterate import translit
 
 BASE_URL = "http://dom.mingkh.ru"
 
@@ -76,7 +70,8 @@ def scrape_house_info(city, street_type, street, house_type, house, block_type, 
         link = link_node.get("href")
         address_at_link = link_node.get_text()
         current_parts = [el.strip(",.") for el in address_at_link.split()]
-        if set(address_parts) == set(current_parts) and TRANSLIT[city] in link:
+        city_in_translit = translit(city.lower(), 'ru', reversed=True)
+        if set(address_parts) == set(current_parts) and city_in_translit in link:
             house_link = link
             break
 

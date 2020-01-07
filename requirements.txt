@@ -7,7 +7,7 @@ certifi==2019.11.28
 cffi==1.13.2
 chardet==3.0.4
 Click==7.0
--e git+https://github.com/sasha-kir/house_explorer_server.git@10df40484a98f7a1eb8ff476d20a2055782f2ea4#egg=explorer_api
+-e git+https://github.com/sasha-kir/house_explorer_server.git@5bb43a94aa30b6651bd7616df170ef6522f0ffb8#egg=explorer_api
 Flask==1.1.1
 Flask-Bcrypt==0.7.1
 Flask-Cors==3.0.8
@@ -41,6 +41,7 @@ soupsieve==1.9.5
 SQLAlchemy==1.3.12
 SQLAlchemy-Utils==0.36.1
 termcolor==1.1.0
+transliterate==1.10.2
 typed-ast==1.4.0
 urllib3==1.25.7
 wcwidth==0.1.8
