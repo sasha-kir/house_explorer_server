@@ -13,32 +13,6 @@ house_info = Blueprint('dadata', __name__)
 DADATA_KEY = os.environ['DADATA_KEY']
 DADATA_URL = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/'
 
-
-@house_info.route("/user_location", methods=["GET"])
-def get_user_location():
-    client_ip = request.remote_addr
-    # request to dadata API
-    payload = { 'ip': client_ip }
-    headers = {
-        "Accept": "application/json",
-        "Authorization": f'Token {DADATA_KEY}'
-    }
-    url = DADATA_URL + 'iplocate/address'
-    response = requests.get(url, params=payload, headers=headers)
-    location = response.json().get('location', None)
-    if location is None:
-        return jsonify({ 'error': 'was not able to determine location' }), 500
-    else:
-        data = location.get('data')
-        return jsonify({
-            'lat': data['geo_lat'],
-            'lon': data['geo_lon'],
-            'city': data['city'],
-            'country': data['country'],
-            'isoCode': data['region_iso_code'],
-        }), 200
-
-
 @house_info.route("/suggestions", methods=["POST"])
 def get_suggestions():
     headers =  {
