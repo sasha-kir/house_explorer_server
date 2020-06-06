@@ -6,7 +6,7 @@ beautifulsoup4==4.9.1
 certifi==2020.4.5.1
 cffi==1.14.0
 chardet==3.0.4
-click==7.1.1
+click==7.1.2
 -e git+https://github.com/sasha-kir/house_explorer_server.git@5bb43a94aa30b6651bd7616df170ef6522f0ffb8#egg=explorer_api
 Flask==1.1.2
 Flask-Bcrypt==0.7.1
