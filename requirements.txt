@@ -29,7 +29,7 @@ psycopg2==2.8.5
 py==1.8.1
 pycparser==2.20
 PyJWT==1.7.1
-pylint==2.4.4
+pylint==2.5.2
 pylint-flask==0.6
 pylint-plugin-utils==0.6
 pyparsing==2.4.7
