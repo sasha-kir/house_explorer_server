@@ -3,7 +3,7 @@ from . import db
 
 
 class History(db.Model):
-    __tablename__ = 'history'
+    __tablename__ = "history"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, nullable=False)
@@ -18,4 +18,4 @@ class History(db.Model):
         self.added_at = datetime.now().date()
 
     def __repr__(self):
-        return '<History entry by user %r at %r>' % (self.user_id, self.added_at)
+        return "<History entry by user %r at %r>" % (self.user_id, self.added_at)

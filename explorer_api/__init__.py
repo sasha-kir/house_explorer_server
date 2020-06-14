@@ -13,7 +13,8 @@ from .views.houses_view import house_info
 from .views.profile_view import profile
 from .views.history_view import history
 
-DB_URL = os.environ['DATABASE_URL']
+DB_URL = os.environ["DATABASE_URL"]
+
 
 def create_app(testing=False):
     app = Flask(__name__)
@@ -21,9 +22,9 @@ def create_app(testing=False):
     CORS(app)
 
     if testing:
-        app.config.from_object(app_config['testing'])
+        app.config.from_object(app_config["testing"])
     else:
-        env_name = os.environ['FLASK_ENV']
+        env_name = os.environ["FLASK_ENV"]
         app.config.from_object(app_config[env_name])
 
     bcrypt.init_app(app)
@@ -34,12 +35,11 @@ def create_app(testing=False):
     app.register_blueprint(profile)
     app.register_blueprint(history)
 
-    @app.route('/', methods=['GET'])
+    @app.route("/", methods=["GET"])
     def index():
         return "You've reached an API running on Flask."
 
-
-    @app.cli.command('resetdb')
+    @app.cli.command("resetdb")
     def resetdb_command():
         """
         Destroys and creates the database + tables.
@@ -47,14 +47,14 @@ def create_app(testing=False):
         """
 
         if database_exists(DB_URL):
-            print('Deleting database.')
+            print("Deleting database.")
             drop_database(DB_URL)
         if not database_exists(DB_URL):
-            print('Creating database.')
+            print("Creating database.")
             create_database(DB_URL)
 
-        print('Creating tables.')
+        print("Creating tables.")
         db.create_all()
-        print(colored('Database ready!', 'green'))
+        print(colored("Database ready!", "green"))
 
     return app
