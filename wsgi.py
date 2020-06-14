@@ -1,7 +1,8 @@
 from dotenv import load_dotenv, find_dotenv
-from explorer_api import create_app
 
 load_dotenv(find_dotenv())
+
+from explorer_api import create_app  # noqa: E402
 
 app = create_app()
 
