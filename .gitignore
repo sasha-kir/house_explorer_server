@@ -4,6 +4,7 @@ __pycache__/
 
 # env files
 *.env
+*.venv
 
 # editor files
 .vscode
