@@ -51,12 +51,21 @@ Built using Python 3.7 and PostgreSQL.
 
 1. Run tests
 
-    ```
+    ```sh
     pytest
     ```
 
-1. Run server locally
+1. Run server
 
-    ```
+    development
+
+    ```sh
     flask run
+    ```
+
+    production
+
+    ```sh
+    export FLASK_ENV=production
+    gunicorn wsgi:app -b 0.0.0.0:7000 -w 4
     ```
