@@ -1,0 +1,26 @@
+name: Update api server remotely
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Update dependencies
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.PRIVATE_KEY }}
+            script: |
+                cd house-explorer/*server
+                git fetch
+                git reset --hard origin/master
+                source .venv/bin/activate
+                poetry install
+                deactivate
+                supervisorctl restart house_explorer_server
