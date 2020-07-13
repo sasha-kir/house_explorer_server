@@ -6,25 +6,27 @@ BASE_URL = "http://dom.mingkh.ru"
 
 
 def scrape_house_info(city, street_type, street, house_type, house, block_type, block):
-
     address_parts = [street_type]
 
     # if street name consists of multiple words
     if " " in street:
-        address_parts += street.split()
+        address_parts += [el.strip(".") for el in street.split()]
     else:
         address_parts += [street]
 
     address_parts += [house_type, house]
 
     if block:
+        if block_type == "литер":
+            block_type = "лит"
         address_parts += [block_type]
         if "стр" in block:
             address_parts += block.split()
         else:
             address_parts += [block]
 
-    full_address = [city] + address_parts
+    address_parts = [part.lower() for part in address_parts]
+    full_address = [city, *address_parts]
 
     payload = {"address": "+".join(full_address), "searchtype": "house"}
 
@@ -73,7 +75,7 @@ def scrape_house_info(city, street_type, street, house_type, house, block_type, 
         link_node = house.find("a")
         link = link_node.get("href")
         address_at_link = link_node.get_text()
-        current_parts = [el.strip(",.") for el in address_at_link.split()]
+        current_parts = [el.strip(",.").lower() for el in address_at_link.split()]
         city_in_translit = translit(city.lower(), "ru", reversed=True)
         if set(address_parts) == set(current_parts) and city_in_translit in link:
             house_link = link
@@ -82,7 +84,6 @@ def scrape_house_info(city, street_type, street, house_type, house, block_type, 
     if not house_link:
         return {"error": "No entry found for address"}
 
-    # print(BASE_URL + house_link)
     house_page = requests.get(BASE_URL + house_link)
     soup = BeautifulSoup(house_page.text, "html.parser")
     house_info_list = soup.find("dl", class_="dl-horizontal house")
