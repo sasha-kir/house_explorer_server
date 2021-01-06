@@ -168,7 +168,7 @@ Flask = "*"
 
 [[package]]
 name = "flask-cors"
-version = "3.0.9"
+version = "3.0.10"
 description = "A Flask extension adding a decorator for CORS support"
 category = "main"
 optional = false
@@ -566,7 +566,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "a13ee5f9f0fb834852c344807a4fed86f8fd03c958fb1ae88cedb3a9a0e560aa"
+content-hash = "2519fa3c37a7d568f3a67123559ae17c8d52cda0ec7a37a21734fcf17384b2ac"
 
 [metadata.files]
 appdirs = [
@@ -669,8 +669,8 @@ flask-bcrypt = [
     {file = "Flask-Bcrypt-0.7.1.tar.gz", hash = "sha256:d71c8585b2ee1c62024392ebdbc447438564e2c8c02b4e57b56a4cafd8d13c5f"},
 ]
 flask-cors = [
-    {file = "Flask-Cors-3.0.9.tar.gz", hash = "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8"},
-    {file = "Flask_Cors-3.0.9-py2.py3-none-any.whl", hash = "sha256:cee4480aaee421ed029eaa788f4049e3e26d15b5affb6a880dade6bafad38324"},
+    {file = "Flask-Cors-3.0.10.tar.gz", hash = "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"},
+    {file = "Flask_Cors-3.0.10-py2.py3-none-any.whl", hash = "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438"},
 ]
 flask-sqlalchemy = [
     {file = "Flask-SQLAlchemy-2.4.4.tar.gz", hash = "sha256:bfc7150eaf809b1c283879302f04c42791136060c6eeb12c0c6674fb1291fae5"},
