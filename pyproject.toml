@@ -18,7 +18,7 @@ pyjwt = "==2.0.1"
 python-dotenv = "==0.17.0"
 requests = "==2.25.1"
 sqlalchemy = "==1.4.7"
-sqlalchemy-utils = "==0.36.8"
+sqlalchemy-utils = "==0.37.0"
 transliterate = "==1.10.2"
 
 [tool.poetry.dev-dependencies]
