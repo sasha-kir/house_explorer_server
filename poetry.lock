@@ -489,11 +489,11 @@ sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
 name = "sqlalchemy-utils"
-version = "0.37.1"
+version = "0.37.2"
 description = "Various utility functions for SQLAlchemy."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = "~=3.4"
 
 [package.dependencies]
 six = "*"
@@ -589,7 +589,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "b88ac1e9220b63ad00180ccc308ac595b0c2e01ba973f83b82ffd4a87d4ca023"
+content-hash = "357cc6173bbb78ffd402580b4b0f8b785468e359b55bdd69308c435fc9ce6b22"
 
 [metadata.files]
 appdirs = [
@@ -958,8 +958,8 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.13.tar.gz", hash = "sha256:1d8a71c2bf21437d6216ba1963507d4d1a37920429eafd09d85387d0d078fa5a"},
 ]
 sqlalchemy-utils = [
-    {file = "SQLAlchemy-Utils-0.37.1.tar.gz", hash = "sha256:24bedfac11d789e34b8aad9c5c64212263964e2d1c5a61e3ec0f361205661cd7"},
-    {file = "SQLAlchemy_Utils-0.37.1-py3-none-any.whl", hash = "sha256:d27202f70ab0ac8707b8ab6a5a5bfa36014190bd30246f27bf1d7fc6f8175277"},
+    {file = "SQLAlchemy-Utils-0.37.2.tar.gz", hash = "sha256:c60b8b43c9ef809d147b0bc571cfbfe0992f854ec242bc01ab7a562f76113743"},
+    {file = "SQLAlchemy_Utils-0.37.2-py3-none-any.whl", hash = "sha256:042e08454ee7b822b1e2f2b7c20f76fe7b8255de10354718a11e68ced1a64643"},
 ]
 termcolor = [
     {file = "termcolor-1.1.0.tar.gz", hash = "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"},
